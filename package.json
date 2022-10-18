@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "request": "^2.88.2",
+    "yarn": "^1.22.19"
+  },
+  "name": "todo-list-v1",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "nodemon app.js"
+  },
+  "description": "this is todo app using nodejs(express server) for backend ",
+  "main": "app.js",
+  "author": "Ammar Talpur",
+  "license": "MIT",
+  "devDependencies": {
+    "ejs": "^3.1.8"
+  }
+}
