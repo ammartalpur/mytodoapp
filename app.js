@@ -7,11 +7,12 @@ const path = require('path')
 
 const app = express()
 const hostname = "127.0.0.1"
-const port = 3000
+const port = process.env.port || 3000
 
 let newItem
 
-mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
+// mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
+mongoose.connect('mongodb+srv://ammar:ZIMuaFG2fkFpm2si@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
 
 
 // Main Work
