@@ -72,10 +72,7 @@ app.get('/', (req, res) => {
     function (items) {
       newItem = items
       if (newItem.length === 0) {
-        console.log("Success")
         Item.insertMany(defaultItems).then(function () {
-          console.log("Default Items inserted into DB");
-          // res.render('list', { listTitle: "Today", newItemList: newItem })
 
         }).catch(function (err) {
           console.log(err._message);
@@ -85,8 +82,6 @@ app.get('/', (req, res) => {
 
         res.render('list', { listTitle: "Today", newItemList: newItem })
 
-
-        console.log("Failed");
       }
     }
   ).catch(
@@ -123,7 +118,7 @@ app.post('/', (req, res) => {
 
   if (req.body.list == 'remove') {
     Item.deleteMany({}).then(function () {
-      console.log("Item Deleted");
+
     }).catch(
       function (err) {
         console.log(err)
@@ -131,6 +126,13 @@ app.post('/', (req, res) => {
     )
   }
 
+})
+
+app.post('/delete', (req, res) => {
+  let id = req.body.checkbox
+  Item.deleteOne({ _id: id }).then(function () {
+    res.redirect('/')
+  })
 })
 
 app.get('/work', (req, res) => {
