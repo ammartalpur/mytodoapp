@@ -45,6 +45,12 @@ const item3 = new Item({
 })
 
 
+const customListSchema = new mongoose.Schema({
+  name: String,
+  item: itemSchema
+})
+
+const CustomList = mongoose.model('CustomList', customListSchema)
 
 const defaultItems = [item1, item2, item3]
 
@@ -59,6 +65,18 @@ db.once("open", function () {
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname))
+
+
+app.get('/:customListName', (req, res) => {
+  const customListName = req.params.customListName
+
+  // const list = new CustomList({
+  //   name: customListName,
+  //   item: defaultItems
+  // })
+
+  // list.save()
+})
 
 
 app.get('/', (req, res) => {
