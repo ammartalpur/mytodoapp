@@ -14,7 +14,7 @@ let newItem
 mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
 
 
-
+// Main Work
 
 
 function disconnectFromDB() {
@@ -59,11 +59,6 @@ db.once("open", function () {
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname))
-
-
-
-
-
 
 
 app.get('/', (req, res) => {
@@ -135,13 +130,6 @@ app.post('/delete', (req, res) => {
   })
 })
 
-app.get('/work', (req, res) => {
-  res.render('list', { listTitle: "Work List", newItemList: workItems })
-})
-
-app.post('/work', (req, res) => {
-  res.redirect('/work')
-})
 
 app.listen(port, hostname, () => {
   console.log(`The server is running on http://${hostname}:${port}/`);
