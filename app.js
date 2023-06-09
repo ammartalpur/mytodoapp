@@ -30,7 +30,14 @@ const itemSchema = new mongoose.Schema({
   name: String
 })
 
+
+const customListSchema = new mongoose.Schema({
+  name: String,
+  item: [itemSchema]
+})
+
 const Item = mongoose.model("Item", itemSchema)
+const CustomList = mongoose.model('CustomList', customListSchema)
 
 const item1 = new Item({
   name: "Press + to add item"
@@ -45,12 +52,7 @@ const item3 = new Item({
 })
 
 
-const customListSchema = new mongoose.Schema({
-  name: String,
-  item: itemSchema
-})
 
-const CustomList = mongoose.model('CustomList', customListSchema)
 
 const defaultItems = [item1, item2, item3]
 
@@ -69,13 +71,18 @@ app.use(express.static(__dirname))
 
 app.get('/:customListName', (req, res) => {
   const customListName = req.params.customListName
+  console.log(customListName);
+  const list = new CustomList({
+    name: customListName,
+    item: defaultItems
+  })
 
-  // const list = new CustomList({
-  //   name: customListName,
-  //   item: defaultItems
-  // })
-
-  // list.save()
+  list.save().then(function () {
+    console.log("Saved on Database")
+  }).catch(function (err) {
+    console.log(err)
+    console.log("Failed to Database")
+  })
 })
 
 
