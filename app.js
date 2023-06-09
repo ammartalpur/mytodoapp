@@ -77,12 +77,27 @@ app.get('/:customListName', (req, res) => {
     item: defaultItems
   })
 
-  list.save().then(function () {
-    console.log("Saved on Database")
+
+
+  CustomList.find({ name: customListName }).then(function (data) {
+    if (data.length === 0) {
+      console.log("not Found");
+      list.save().then(function () {
+        console.log("Saved on Database")
+        res.render('list', { listTitle: data.name, newItemList: data.item })
+
+      }).catch(function (err) {
+        console.log(err)
+        console.log("Failed to Database")
+      })
+    } else {
+      console.log("Found");
+      res.render('list', { listTitle: data.name, newItemList: data.item })
+    }
   }).catch(function (err) {
-    console.log(err)
-    console.log("Failed to Database")
+    console.log(err);
   })
+
 })
 
 
