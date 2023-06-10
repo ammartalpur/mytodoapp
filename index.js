@@ -1,17 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-
+const env = require('dotenv').config({ path: './.env' })
 const path = require('path')
 
 
 const app = express()
-const port = process.env.PORT || 3000
-
+const PORT = process.env.PORT || 3000
 let newItem
 
-// mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
-mongoose.connect('mongodb+srv://ammar:ZIMuaFG2fkFpm2si@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
+mongoose.set('strictQuery', false)
+const connectDB = mongoose.connect(process.env.MONGO_URL)
+// const connectDB = mongoose.connect('mongodb+srv://ammar:ZIMuaFG2fkFpm2si@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
 
 
 // Main Work
@@ -130,7 +130,11 @@ app.post('/delete', (req, res) => {
   })
 })
 
+connectDB.then(function () {
+  app.listen(PORT, () => {
+    console.log(`The server is running on ${PORT}/`);
+  })
+}).catch(function () {
+  console.log("Failed to connect to database");
+})
 
-app.listen(port, () => {
-  console.log(`The server is running on http://${hostname}:${port}/`);
-})  
