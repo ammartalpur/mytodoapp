@@ -10,7 +10,7 @@ const PORT = process.env.PORT
 let newItem
 
 mongoose.set('strictQuery', false)
-const connectDB = mongoose.connect(process.env.MONGO_URL)
+const connectDB = mongoose.connect("mongodb+srv://ammar:ZIMuaFG2fkFpm2si@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority")
 // const connectDB = mongoose.connect('mongodb+srv://ammar:ZIMuaFG2fkFpm2si@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
 
 
