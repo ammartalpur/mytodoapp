@@ -6,7 +6,6 @@ const path = require('path')
 
 
 const app = express()
-const hostname = "127.0.0.1"
 const port = process.env.PORT || 3000
 
 let newItem
@@ -132,6 +131,6 @@ app.post('/delete', (req, res) => {
 })
 
 
-app.listen(port, hostname, () => {
+app.listen(port, () => {
   console.log(`The server is running on http://${hostname}:${port}/`);
 })  
