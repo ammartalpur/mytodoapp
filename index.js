@@ -1,12 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const env = require('dotenv').config({ path: './.env' })
+const env = require('dotenv')
 const path = require('path')
 
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 let newItem
 
 mongoose.set('strictQuery', false)
