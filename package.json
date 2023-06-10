@@ -14,7 +14,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "start": "node index.jx"
+    "start": "node index.js"
   },
   "description": "this is todo app using nodejs(express server) for backend ",
   "main": "app.js",
