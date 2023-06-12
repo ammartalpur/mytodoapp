@@ -58,11 +58,7 @@ const defaultItems = [item1, item2, item3]
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection failed:"));
-db.once("open", function () {
-  console.log("Database Connected Succesfully");
 
-
-})
 
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,7 +67,7 @@ app.use(express.static(__dirname))
 
 app.get('/:customListName', (req, res) => {
   const customListName = req.params.customListName
-  console.log(customListName);
+  // console.log(customListName);
   const list = new CustomList({
     name: customListName,
     item: defaultItems
@@ -84,7 +80,8 @@ app.get('/:customListName', (req, res) => {
       console.log("not Found");
       list.save().then(function () {
         console.log("Saved on Database")
-        res.render('list', { listTitle: data.name, newItemList: data.item })
+        console.log(data)
+        res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
 
       }).catch(function (err) {
         console.log(err)
@@ -92,7 +89,7 @@ app.get('/:customListName', (req, res) => {
       })
     } else {
       console.log("Found");
-      res.render('list', { listTitle: data.name, newItemList: data.item })
+      res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
     }
   }).catch(function (err) {
     console.log(err);
@@ -114,7 +111,6 @@ app.get('/', (req, res) => {
         })
         res.redirect('/')
       } else {
-
         res.render('list', { listTitle: "Today", newItemList: newItem })
 
       }
@@ -133,24 +129,27 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
 
   let newItem = req.body.items
-  if (req.body.list == 'Work') {
+  let listName = req.body.list
+  console.log(listName)
+  if (listName == 'Today') {
     const itemCreated = new Item({
       name: newItem
     })
     itemCreated.save().then(function () {
       res.redirect('/')
     })
-
   } else {
-    const itemCreated = new Item({
-      name: newItem
+    CustomList.findOne({ name: listName }).then(
+      function (foundList) {
+        foundList.item.push(itemCreated)
+        foundList.save()
+        res.redirect("/" + listName)
+      }
+    ).catch(function () {
+      console.log("cant find")
+      res.redirect("/" + listName)
     })
-    itemCreated.save().then(function () {
-      res.redirect('/')
-    })
-
   }
-
   if (req.body.list == 'remove') {
     Item.deleteMany({}).then(function () {
 
@@ -161,16 +160,23 @@ app.post('/', (req, res) => {
     )
   }
 
+
+
 })
 
 app.post('/delete', (req, res) => {
   let id = req.body.checkbox
   Item.deleteOne({ _id: id }).then(function () {
-    res.redirect('/')
+    res.redirect('/ ')
   })
 })
 
 
-app.listen(port, hostname, () => {
-  console.log(`The server is running on http://${hostname}:${port}/`);
-})  
+
+
+db.once("open", function () {
+  console.log("Database Connected Succesfully");
+  app.listen(port, hostname, () => {
+    console.log(`The server is running on http://${hostname}:${port}/`);
+  })
+})
