@@ -67,7 +67,7 @@ app.use(express.static(__dirname))
 
 app.get('/:customListName', (req, res) => {
   const customListName = req.params.customListName
-  // console.log(customListName);
+  console.log(customListName);
   const list = new CustomList({
     name: customListName,
     item: defaultItems
@@ -75,7 +75,7 @@ app.get('/:customListName', (req, res) => {
 
 
 
-  CustomList.find({ name: customListName }).then(function (data) {
+  CustomList.findOne({ name: customListName }).then(function (data) {
     if (data.length === 0) {
       console.log("not Found");
       list.save().then(function () {
@@ -88,8 +88,9 @@ app.get('/:customListName', (req, res) => {
         console.log("Failed to Database")
       })
     } else {
-      console.log("Found");
-      res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
+      console.log("Found customListName Data");
+      // console.log(data)
+      res.render('list', { listTitle: data.name, newItemList: data.item })
     }
   }).catch(function (err) {
     console.log(err);
@@ -130,25 +131,45 @@ app.post('/', (req, res) => {
 
   let newItem = req.body.items
   let listName = req.body.list
+  const itemCreated = new Item({
+    name: newItem
+  })
   console.log(listName)
   if (listName == 'Today') {
-    const itemCreated = new Item({
-      name: newItem
-    })
+
     itemCreated.save().then(function () {
       res.redirect('/')
     })
   } else {
-    CustomList.findOne({ name: listName }).then(
-      function (foundList) {
-        foundList.item.push(itemCreated)
-        foundList.save()
-        res.redirect("/" + listName)
-      }
-    ).catch(function () {
-      console.log("cant find")
-      res.redirect("/" + listName)
-    })
+    // CustomList.findOne({ name: listName }).then(
+    //   function (foundList) {
+    //     console.log("Founded listName data");
+    //     // console.log(foundList);
+    //     foundList.item.push(itemCreated)
+    //     // foundList.save()
+    //     // res.redirect("/" + listName)
+    //   }
+    // ).catch(function () {
+    //   console.log("cant find")
+    //   // res.redirect("/" + listName)
+    // })
+
+
+    // CustomList.findOneAndUpdate({ name: listName }, { item: itemCreated }).then(
+    //   function (Founded) {
+    //     console.log("Find and Updated");
+    //     // console.log(Founded);
+    //     Founded.item.push(itemCreated)
+    //     res.redirect("/" + listName)
+    //   }
+    // ).catch(function () {
+    //   console.log("Failed");
+    // })
+
+
+
+
+
   }
   if (req.body.list == 'remove') {
     Item.deleteMany({}).then(function () {
