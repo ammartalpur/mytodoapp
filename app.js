@@ -30,7 +30,14 @@ const itemSchema = new mongoose.Schema({
   name: String
 })
 
+
+const customListSchema = new mongoose.Schema({
+  name: String,
+  item: [itemSchema]
+})
+
 const Item = mongoose.model("Item", itemSchema)
+const CustomList = mongoose.model('CustomList', customListSchema)
 
 const item1 = new Item({
   name: "Press + to add item"
@@ -45,22 +52,13 @@ const item3 = new Item({
 })
 
 
-const customListSchema = new mongoose.Schema({
-  name: String,
-  item: itemSchema
-})
 
-const CustomList = mongoose.model('CustomList', customListSchema)
 
 const defaultItems = [item1, item2, item3]
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection failed:"));
-db.once("open", function () {
-  console.log("Database Connected Succesfully");
 
-
-})
 
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -69,13 +67,35 @@ app.use(express.static(__dirname))
 
 app.get('/:customListName', (req, res) => {
   const customListName = req.params.customListName
+  console.log(customListName);
+  const list = new CustomList({
+    name: customListName,
+    item: defaultItems
+  })
 
-  // const list = new CustomList({
-  //   name: customListName,
-  //   item: defaultItems
-  // })
 
-  // list.save()
+
+  CustomList.findOne({ name: customListName }).then(function (data) {
+    if (data.length === 0) {
+      console.log("not Found");
+      list.save().then(function () {
+        console.log("Saved on Database")
+        console.log(data)
+        res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
+
+      }).catch(function (err) {
+        console.log(err)
+        console.log("Failed to Database")
+      })
+    } else {
+      console.log("Found customListName Data");
+      // console.log(data)
+      res.render('list', { listTitle: data.name, newItemList: data.item })
+    }
+  }).catch(function (err) {
+    console.log(err);
+  })
+
 })
 
 
@@ -92,7 +112,6 @@ app.get('/', (req, res) => {
         })
         res.redirect('/')
       } else {
-
         res.render('list', { listTitle: "Today", newItemList: newItem })
 
       }
@@ -111,24 +130,47 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
 
   let newItem = req.body.items
-  if (req.body.list == 'Work') {
-    const itemCreated = new Item({
-      name: newItem
-    })
-    itemCreated.save().then(function () {
-      res.redirect('/')
-    })
+  let listName = req.body.list
+  const itemCreated = new Item({
+    name: newItem
+  })
+  console.log(listName)
+  if (listName == 'Today') {
 
-  } else {
-    const itemCreated = new Item({
-      name: newItem
-    })
     itemCreated.save().then(function () {
       res.redirect('/')
     })
+  } else {
+    // CustomList.findOne({ name: listName }).then(
+    //   function (foundList) {
+    //     console.log("Founded listName data");
+    //     // console.log(foundList);
+    //     foundList.item.push(itemCreated)
+    //     // foundList.save()
+    //     // res.redirect("/" + listName)
+    //   }
+    // ).catch(function () {
+    //   console.log("cant find")
+    //   // res.redirect("/" + listName)
+    // })
+
+
+    // CustomList.findOneAndUpdate({ name: listName }, { item: itemCreated }).then(
+    //   function (Founded) {
+    //     console.log("Find and Updated");
+    //     // console.log(Founded);
+    //     Founded.item.push(itemCreated)
+    //     res.redirect("/" + listName)
+    //   }
+    // ).catch(function () {
+    //   console.log("Failed");
+    // })
+
+
+
+
 
   }
-
   if (req.body.list == 'remove') {
     Item.deleteMany({}).then(function () {
 
@@ -139,16 +181,23 @@ app.post('/', (req, res) => {
     )
   }
 
+
+
 })
 
 app.post('/delete', (req, res) => {
   let id = req.body.checkbox
   Item.deleteOne({ _id: id }).then(function () {
-    res.redirect('/')
+    res.redirect('/ ')
   })
 })
 
 
-app.listen(port, hostname, () => {
-  console.log(`The server is running on http://${hostname}:${port}/`);
-})  
+
+
+db.once("open", function () {
+  console.log("Database Connected Succesfully");
+  app.listen(port, hostname, () => {
+    console.log(`The server is running on http://${hostname}:${port}/`);
+  })
+})
