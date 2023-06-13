@@ -8,8 +8,8 @@ const path = require('path')
 
 const app = express()
 const hostname = "127.0.0.1"
-const port = 3001
-
+const port = 3001 || process.env.PORT;
+ 
 let newItem
 
 // mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
