@@ -11,7 +11,10 @@ const port = 3000
 
 let newItem
 
-mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
+// mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
+mongoose.connect('mongodb+srv://ammar:VgndG6Kec9GMHaZB@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
+
+
 
 
 // Extra Work
