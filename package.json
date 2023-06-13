@@ -11,7 +11,7 @@
   "name": "todo-list-v1",
   "version": "1.0.0",
   "scripts": {
-    "server": "nodemon app.js"
+    "start": "node index.js"
   },
   "description": "this is todo app using nodejs(express server) for backend ",
   "main": "app.js",
