@@ -75,22 +75,39 @@ app.get('/:customListName', (req, res) => {
 
 
 
-  CustomList.findOne({ name: customListName }).then(function (data) {
+  // CustomList.find({ name: customListName }).then(function (data) {
+
+  // })
+  // const table = [1, 2, 3]
+  // console.log(table.item.length);
+
+
+  // CustomList.findOne({ name: customListName }).then(function (data) {
+  //   if (data === null) {
+  //     console.log("not found");
+  //   } else {
+  //     console.log("Found");
+  //   }
+  //   // console.log(data);
+  // })
+  CustomList.find({ name: customListName }).then(function (data) {
+    // console.log(data.length)
     if (data.length === 0) {
-      console.log("not Found");
+      // console.log("not Found");
       list.save().then(function () {
-        console.log("Saved on Database")
-        console.log(data)
-        res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
+        // console.log("Saved on Database")
+        // console.log(data)
+        res.redirect('/' + customListName)
+        // res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
 
       }).catch(function (err) {
         console.log(err)
-        console.log("Failed to Database")
+        // console.log("Failed to Database")
       })
     } else {
-      console.log("Found customListName Data");
+      // console.log("Found customListName Data");
       // console.log(data)
-      res.render('list', { listTitle: data.name, newItemList: data.item })
+      res.render('list', { listTitle: data[0].name, newItemList: data[0].item })
     }
   }).catch(function (err) {
     console.log(err);
@@ -141,35 +158,11 @@ app.post('/', (req, res) => {
       res.redirect('/')
     })
   } else {
-    // CustomList.findOne({ name: listName }).then(
-    //   function (foundList) {
-    //     console.log("Founded listName data");
-    //     // console.log(foundList);
-    //     foundList.item.push(itemCreated)
-    //     // foundList.save()
-    //     // res.redirect("/" + listName)
-    //   }
-    // ).catch(function () {
-    //   console.log("cant find")
-    //   // res.redirect("/" + listName)
-    // })
-
-
-    // CustomList.findOneAndUpdate({ name: listName }, { item: itemCreated }).then(
-    //   function (Founded) {
-    //     console.log("Find and Updated");
-    //     // console.log(Founded);
-    //     Founded.item.push(itemCreated)
-    //     res.redirect("/" + listName)
-    //   }
-    // ).catch(function () {
-    //   console.log("Failed");
-    // })
-
-
-
-
-
+    CustomList.findOne({ name: listName }).then(function (foundList) {
+      foundList.item.push(itemCreated);
+      foundList.save();
+      res.redirect("/" + listName)
+    })
   }
   if (req.body.list == 'remove') {
     Item.deleteMany({}).then(function () {
@@ -187,9 +180,16 @@ app.post('/', (req, res) => {
 
 app.post('/delete', (req, res) => {
   let id = req.body.checkbox
-  Item.deleteOne({ _id: id }).then(function () {
-    res.redirect('/ ')
-  })
+  let listName = req.body.listName
+
+  if (listName === "Today") {
+    Item.deleteOne({ _id: id }).then(function () {
+      res.redirect('/ ')
+    })
+  } else {
+    // CustomList.findByIdAndDelete({ id:})
+  }
+
 })
 
 
