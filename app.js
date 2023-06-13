@@ -1,13 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const _ = require('lodash')
 
 const path = require('path')
 
 
 const app = express()
 const hostname = "127.0.0.1"
-const port = 3000
+const port = 3001
 
 let newItem
 
@@ -69,7 +70,7 @@ app.use(express.static(__dirname))
 
 
 app.get('/:customListName', (req, res) => {
-  const customListName = req.params.customListName
+  const customListName = _.capitalize(req.params.customListName)
   console.log(customListName);
   const list = new CustomList({
     name: customListName,
@@ -190,7 +191,17 @@ app.post('/delete', (req, res) => {
       res.redirect('/ ')
     })
   } else {
-    // CustomList.findByIdAndDelete({ id:})
+    CustomList.findOneAndUpdate({ name: listName }, { $pull: { item: { _id: id } } }).then(
+      function (found) {
+        // console.log(found);
+        res.redirect('/' + listName)
+      }
+    ).catch(
+      function (err) {
+        console.log(err);
+        res.redirect('/')
+      }
+    )
   }
 
 })
