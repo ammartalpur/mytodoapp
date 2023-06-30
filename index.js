@@ -14,7 +14,7 @@ const port = process.env.PORT;
 let newItem
 
 // mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
-mongoose.connect('mongodb + srv://ammar:vJEAsya7hII0lEL0@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://ammar:vJEAsya7hII0lEL0@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
 
 
 
