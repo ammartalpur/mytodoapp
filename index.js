@@ -7,13 +7,14 @@ const path = require('path')
 
 
 const app = express()
-const hostname = "0.0.0.0"
-const port = process.env.PORT || 3000;
+
+const port = process.env.PORT;
+
 
 let newItem
 
 // mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
-mongoose.connect('mongodb+srv://ammar:VgndG6Kec9GMHaZB@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
+mongoose.connect('mongodb + srv://ammar:vJEAsya7hII0lEL0@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
 
 
 
@@ -211,7 +212,7 @@ app.post('/delete', (req, res) => {
 
 db.once("open", function () {
   console.log("Database Connected Succesfully");
-  app.listen(port, hostname, () => {
-    console.log(`The server is running on http://${hostname}:${port}/`);
+  app.listen(port, () => {
+    console.log(`The server is running on ${port}/`);
   })
 })
