@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
@@ -8,13 +9,13 @@ const path = require('path')
 
 const app = express()
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 
 let newItem
 
 // mongoose.connect('mongodb://0.0.0.0:27017/todolistDB')
-mongoose.connect('mongodb+srv://ammar:vJEAsya7hII0lEL0@ammar.z1dmemi.mongodb.net/todolistDB?retryWrites=true&w=majority')
+mongoose.connect(process.env.DB)
 
 
 
@@ -72,7 +73,7 @@ app.use(express.static(__dirname))
 
 app.get('/:customListName', (req, res) => {
   const customListName = _.capitalize(req.params.customListName)
-  console.log(customListName);
+
   const list = new CustomList({
     name: customListName,
     item: defaultItems
@@ -189,7 +190,7 @@ app.post('/delete', (req, res) => {
 
   if (listName === "Today") {
     Item.deleteOne({ _id: id }).then(function () {
-      res.redirect('/ ')
+      res.redirect('/')
     })
   } else {
     CustomList.findOneAndUpdate({ name: listName }, { $pull: { item: { _id: id } } }).then(
